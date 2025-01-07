@@ -21,7 +21,7 @@ builder.Services.AddDbContext<StoreContext>(options =>
 
 //validators
 builder.Services.AddScoped<IValidator<PersonaInsertDto>, PersonaInsertValidator>();
-builder.Services.AddScoped<IValidator<PersonaUpdateDto>, PersonaUpdateDto>();
+//builder.Services.AddScoped<IValidator<PersonaUpdateDto>, PersonaUpdateDto>();
 
 
 var app = builder.Build();
