@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PruebaAspirantes.DTOs;
 using PruebaAspirantes.Models;
+using PruebaAspirantes.Services;
 using static Azure.Core.HttpHeader;
 
 namespace PruebaAspirantes.Controllers
@@ -12,43 +13,31 @@ namespace PruebaAspirantes.Controllers
     [ApiController]
     public class PersonaController : ControllerBase
     {
-        private StoreContext _context;
+        
         private IValidator<PersonaInsertDto> _personaInsertValidator;
-        public PersonaController(StoreContext context,
-            IValidator<PersonaInsertDto> personaInsertValidator)
+        private IValidator<PersonaUpdateDto> _personaUpdateValidator;
+        private ICommonService<PersonaDto, PersonaInsertDto, PersonaUpdateDto> _personaService;
+        public PersonaController(
+            IValidator<PersonaInsertDto> personaInsertValidator,
+            IValidator<PersonaUpdateDto> personaUpdateValidator,
+            [FromKeyedServices("personaService")]ICommonService<PersonaDto, PersonaInsertDto, PersonaUpdateDto> personaService)
         {
-            _context = context;
+            
             _personaInsertValidator = personaInsertValidator;
+            _personaUpdateValidator = personaUpdateValidator;
+            _personaService = personaService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<PersonaDto>> Get() =>
-            await _context.Personas.Select(x => new PersonaDto
-            {
-                IdPersona = x.IdPersona,
-                Names = x.Names,
-                LastNames = x.LastNames,
-                Identificacion = x.Identificacion,
-            }).ToListAsync();
+            await _personaService.Get();
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PersonaDto>> GetById(int id)
         {
-            var persona = await _context.Personas.FindAsync(id);
-            if (persona == null)
-            {
-                return NotFound();
-            }
+            var personaDto = await _personaService.GetById(id);
 
-            var personaDto = new PersonaDto
-            {
-                IdPersona = persona.IdPersona,
-                Names = persona.Names,
-                LastNames = persona.LastNames,
-                Identificacion = persona.Identificacion,
-            };
-
-            return Ok(personaDto);
+            return personaDto == null ? NotFound() : Ok(personaDto);
         }
 
         [HttpPost]
@@ -60,65 +49,30 @@ namespace PruebaAspirantes.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var persona = new Persona()
-            {
-                Names = personaInsertDto.Names,
-                LastNames = personaInsertDto.LastNames,
-                Identificacion = personaInsertDto.Identificacion,
-            };
 
-            await _context.Personas.AddAsync(persona);
-            await _context.SaveChangesAsync();
+            var personaDto = await _personaService.Add(personaInsertDto);
 
-            var personaDto = new PersonaDto
-            {
-                IdPersona = persona.IdPersona,
-                Names = persona.Names,
-                LastNames = persona.LastNames,
-                Identificacion = persona.Identificacion,
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = persona.IdPersona }, personaDto);
+            return CreatedAtAction(nameof(GetById), new { id = personaDto.IdPersona }, personaDto);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<PersonaDto>> Update(int id, PersonaUpdateDto personaUpdateDto)
         {
-            var persona = await _context.Personas.FindAsync(id);
-
-            if (persona == null)
+            var validationResult = await _personaUpdateValidator.ValidateAsync(personaUpdateDto);
+            if (!validationResult.IsValid)
             {
-                return NotFound();
+                return BadRequest(validationResult.Errors);
             }
-
-            persona.Names = personaUpdateDto.Names;
-            persona.LastNames = personaUpdateDto.LastNames;
-            persona.Identificacion = personaUpdateDto.Identificacion;
-            await _context.SaveChangesAsync();
-
-            var personaDto = new PersonaDto
-            {
-                IdPersona = persona.IdPersona,
-                Names = persona.Names,
-                LastNames = persona.LastNames,
-                Identificacion = persona.Identificacion,
-            };
-            return Ok(personaDto);
+ 
+            var personaDto = await _personaService.Update(id, personaUpdateDto);
+            return personaDto == null? NotFound() : Ok(personaDto);
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult<PersonaDto>> Delete(int id)
         {
-            var persona = await _context.Personas.FindAsync(id);
-            if (persona == null)
-            {
-                return NotFound();
-            }
-
-            _context.Personas.Remove(persona);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            var personaDto = await _personaService.Delete(id);
+            return personaDto == null ? NotFound() : Ok(personaDto);
         }
     }
 }

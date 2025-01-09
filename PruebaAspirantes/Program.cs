@@ -1,7 +1,10 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PruebaAspirantes.DTOs;
 using PruebaAspirantes.Models;
+using PruebaAspirantes.Repository;
+using PruebaAspirantes.Services;
 using PruebaAspirantes.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +15,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddKeyedScoped<ICommonService<PersonaDto, PersonaInsertDto, PersonaUpdateDto>, PersonaService>("personaService");
 
+//repopsitory
+builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>
 {
@@ -21,7 +27,7 @@ builder.Services.AddDbContext<StoreContext>(options =>
 
 //validators
 builder.Services.AddScoped<IValidator<PersonaInsertDto>, PersonaInsertValidator>();
-//builder.Services.AddScoped<IValidator<PersonaUpdateDto>, PersonaUpdateDto>();
+builder.Services.AddScoped<IValidator<PersonaUpdateDto>, PersonaUpdateValidator>();
 
 
 var app = builder.Build();
