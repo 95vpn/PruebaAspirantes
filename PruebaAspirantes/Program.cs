@@ -19,6 +19,7 @@ builder.Services.AddKeyedScoped<ICommonService<PersonaDto, PersonaInsertDto, Per
 
 //repopsitory
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
+
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>
 {
