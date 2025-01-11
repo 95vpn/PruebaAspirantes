@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddKeyedScoped<ICommonService<PersonaDto, PersonaInsertDto, PersonaUpdateDto>, PersonaService>("personaService");
+builder.Services.AddKeyedScoped<ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto>, UsuarioService>("usuarioService");
 
 //repopsitory
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
@@ -29,7 +30,8 @@ builder.Services.AddDbContext<StoreContext>(options =>
 //validators
 builder.Services.AddScoped<IValidator<PersonaInsertDto>, PersonaInsertValidator>();
 builder.Services.AddScoped<IValidator<PersonaUpdateDto>, PersonaUpdateValidator>();
-
+builder.Services.AddScoped<IValidator<UsuarioInsertDto>, UsuarioInsertValidator>();
+builder.Services.AddScoped<IValidator<UsuarioUpdateDto>, UsuarioUpdateValidator>();
 
 var app = builder.Build();
 
