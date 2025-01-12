@@ -20,6 +20,7 @@ builder.Services.AddKeyedScoped<ICommonService<UsuarioDto, UsuarioInsertDto, Usu
 
 //repopsitory
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
+builder.Services.AddScoped<IRepository<Usuario>, UsuarioRepository>();
 
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>

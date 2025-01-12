@@ -25,8 +25,8 @@ namespace PruebaAspirantes.Validators
                 }).WithMessage("El nombre de usuario ya existe");
 
             RuleFor(x => x.Password)
-                .MaximumLength(8).WithMessage("Debe contener al menos 8 dígitos")
-                .Matches("[A-Z]").WithMessage("Debe tener al menos una letra mayuscula")
+                .MaximumLength(8).WithMessage("Contrseña debe contener al menos 8 dígitos")
+                .Matches("[A-Z]").WithMessage("Constraseña debe tener al menos una letra mayuscula")
                 .Matches("^[^\\s]+$").WithMessage("La contraseña no debe contener espacios.")
                 .Matches("[!@#$%^&*(),.?\":{}|<>]").WithMessage("La contraseña debe contener al menos un signo (por ejemplo, !, @, #, $)."); ;
         }
