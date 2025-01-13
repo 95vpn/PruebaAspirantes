@@ -113,7 +113,8 @@ namespace PruebaAspirantes.Services
             string email = emailgenerado;
             int counter = 0;
 
-            while (await _context.Usuarios.AnyAsync(u => u.Email == email))
+            var usuarios = await _usuarioRepository.Get();
+            while ( usuarios.Any(u => u.Email == email))
             {
                 counter++;
                 email = $"{emailgenerado.Split('@')[0]}{counter}@mail.com";
