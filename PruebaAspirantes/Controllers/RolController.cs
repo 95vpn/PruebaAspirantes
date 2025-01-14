@@ -11,13 +11,13 @@ namespace PruebaAspirantes.Controllers
     [ApiController]
     public class RolController : ControllerBase
     {
-        private StoreContext _context;
+        
         private ICommonService<RolDto, RolIsertDto, RolUpdateDto> _rolService;
 
-        public RolController(StoreContext context,
+        public RolController(
             [FromKeyedServices("rolService")] ICommonService<RolDto, RolIsertDto, RolUpdateDto> rolService)
         {
-            _context = context;
+            
             _rolService = rolService;
         }
 
@@ -53,18 +53,8 @@ namespace PruebaAspirantes.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var rol = await _context.Roles.FindAsync(id);
-
-            if (rol == null)
-            {
-                return NotFound();
-            }
-
-
-            _context.Roles.Remove(rol);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            var rolDto = await _rolService.Delete(id);
+            return rolDto == null ? NotFound() : Ok(rolDto);
         }
         
 

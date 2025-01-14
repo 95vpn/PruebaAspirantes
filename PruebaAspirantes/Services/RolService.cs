@@ -1,28 +1,40 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PruebaAspirantes.DTOs;
 using PruebaAspirantes.Models;
+using PruebaAspirantes.Repository;
 
 namespace PruebaAspirantes.Services
 {
     public class RolService : ICommonService<RolDto, RolIsertDto, RolUpdateDto>
     {
-        private StoreContext _context;
+        
+        private IRepository<Rol> _rolRepository;
 
-        public RolService(StoreContext context)
+        public RolService(
+            IRepository<Rol> rolRepository)
         {
-            _context = context;
+            
+            _rolRepository = rolRepository;
         }
 
-        public async Task<IEnumerable<RolDto>> Get() =>
-            await _context.Roles.Select(r => new RolDto
+        public async Task<IEnumerable<RolDto>> Get()
+        {
+            var roles = await _rolRepository.Get();
+
+            return roles.Select(r => new RolDto()
             {
+
                 IdRol = r.IdRol,
                 RolName = r.RolName
-            }).ToListAsync();
+
+            });
+            
+        }
+            
 
         public async Task<RolDto> GetById(int id)
         {
-            var rol = await _context.Roles.FindAsync(id);
+            var rol = await _rolRepository.GetById(id);
 
             if (rol != null)
             {
@@ -43,8 +55,8 @@ namespace PruebaAspirantes.Services
                 RolName = rolInsertDto.RolName
             };
 
-            await _context.Roles.AddAsync(rol);
-            await _context.SaveChangesAsync();
+            await _rolRepository.Add(rol);
+            await _rolRepository.Save();
 
             var rolDto = new RolDto
             {
@@ -57,12 +69,13 @@ namespace PruebaAspirantes.Services
 
         public async Task<RolDto> Update(int id, RolUpdateDto rolUpdateDto)
         {
-            var rol = await _context.Roles.FindAsync(id);
+            var rol = await _rolRepository.GetById(id);
             if (rol != null)
             {
                 rol.RolName = rolUpdateDto.RolName;
 
-                await _context.SaveChangesAsync();
+                _rolRepository.Update(rol);
+                await _rolRepository.Save();
 
                 var rolDto = new RolDto
                 {
@@ -79,7 +92,22 @@ namespace PruebaAspirantes.Services
 
         public async Task<RolDto> Delete(int id)
         {
-            throw new NotImplementedException();
+            var rol = await _rolRepository.GetById(id);
+            if (rol != null)
+            {
+                var rolDto = new RolDto
+                {
+                    IdRol = rol.IdRol,
+                    RolName = rol.RolName
+                };
+
+                _rolRepository.Delete(rol);
+                await _rolRepository.Save();
+
+                return rolDto;
+
+            }
+            return null;
         }
 
 

@@ -18,9 +18,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddKeyedScoped<ICommonService<PersonaDto, PersonaInsertDto, PersonaUpdateDto>, PersonaService>("personaService");
 builder.Services.AddKeyedScoped<ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto>, UsuarioService>("usuarioService");
 builder.Services.AddKeyedScoped<ICommonService<RolDto, RolIsertDto, RolUpdateDto>, RolService>("rolService");
+builder.Services.AddKeyedScoped<ICommonService<RolOptionDto, RolOptionInsertDto, RolOptionUpdateDto>, RolOptionService>("rolOptionService");
+
 //repopsitory
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
 builder.Services.AddScoped<IRepository<Usuario>, UsuarioRepository>();
+builder.Services.AddScoped<IRepository<Rol>, RolRepository>();
+builder.Services.AddScoped<IRepository<RolOpcion>, RolOptionRepository>();
 
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>
