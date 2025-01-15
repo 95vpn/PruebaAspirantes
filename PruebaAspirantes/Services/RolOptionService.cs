@@ -60,14 +60,46 @@ namespace PruebaAspirantes.Services
             return rolOptionDto;
         }
 
-        public Task<RolOptionDto> Update(int id, RolOptionUpdateDto personaUpdateDto)
+        public async Task<RolOptionDto> Update(int id, RolOptionUpdateDto rolOptionUpdateDto)
         {
-            throw new NotImplementedException();
+            var rolOption = await  _rolOptionRepository.GetById(id);
+            if (rolOption != null)
+            {
+                rolOption.NameOption = rolOptionUpdateDto.NameOption;
+
+                _rolOptionRepository.Update(rolOption);
+                await _rolOptionRepository.Save();
+
+                var rolOptionDto = new RolOptionDto()
+                {
+                    IdOpcion = rolOption.IdOpcion,
+                    NameOption = rolOption.NameOption,
+                };
+
+                return rolOptionDto;
+
+            }
+            return null;
         }
 
-        public Task<RolOptionDto> Delete(int id)
+        public async Task<RolOptionDto> Delete(int id)
         {
-            throw new NotImplementedException();
+            var rolOption = await _rolOptionRepository.GetById(id);
+
+            if (rolOption != null)
+            {
+                var rolOptionDto = new RolOptionDto()
+                {
+                    IdOpcion = rolOption.IdOpcion,
+                    NameOption = rolOption.NameOption,
+                };
+
+                _rolOptionRepository.Delete(rolOption);
+                await _rolOptionRepository.Save();
+
+                return rolOptionDto;
+            }
+            return null;
         }
 
         

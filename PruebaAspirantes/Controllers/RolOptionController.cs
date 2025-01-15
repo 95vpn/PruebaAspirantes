@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PruebaAspirantes.DTOs;
+using PruebaAspirantes.Models;
 using PruebaAspirantes.Services;
 
 namespace PruebaAspirantes.Controllers
@@ -34,6 +35,22 @@ namespace PruebaAspirantes.Controllers
             var rolOptionDto = await _rolOptionService.Add(rolOptionInsertDto);
 
             return CreatedAtAction(nameof(GetById), new { id = rolOptionDto.IdOpcion }, rolOptionDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<RolOpcion>> Update(int id, RolOptionUpdateDto rolOptionUpdateDto)
+        {
+            var rolOptionDto = await _rolOptionService.Update(id, rolOptionUpdateDto);
+
+            return rolOptionDto == null ? NotFound() : Ok(rolOptionDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var rolOptionDto = await _rolOptionService.Delete(id);
+
+            return rolOptionDto == null ? NotFound() : Ok(rolOptionDto);
         }
     }
 }

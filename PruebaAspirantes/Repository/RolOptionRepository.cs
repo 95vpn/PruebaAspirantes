@@ -23,14 +23,15 @@ namespace PruebaAspirantes.Repository
         public async Task Add(RolOpcion rolOpcion) =>
             await _context.RolOpciones.AddAsync(rolOpcion);
 
-        public void Update(RolOpcion entity)
+        public void Update(RolOpcion rolOption)
         {
-            throw new NotImplementedException();
+            _context.RolOpciones.Attach(rolOption);
+            _context.RolOpciones.Entry(rolOption).State = EntityState.Modified;
         }
 
-        public void Delete(RolOpcion entity)
+        public void Delete(RolOpcion rolOption)
         {
-            throw new NotImplementedException();
+            _context.RolOpciones.Remove(rolOption);
         }
 
 
