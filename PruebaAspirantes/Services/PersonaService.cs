@@ -49,6 +49,28 @@ namespace PruebaAspirantes.Services
 
             return null;
         }
+        /*
+        public async Task<PersonaDto> GetById(params object[] keyValues)
+        {
+            var persona = await _personaRepository.GetById(keyValues);
+
+            if (persona != null)
+            {
+                var personaDto = new PersonaDto
+                {
+                    IdPersona = persona.IdPersona,
+                    Names = persona.Names,
+                    LastNames = persona.LastNames,
+                    Identificacion = persona.Identificacion,
+                };
+
+                return personaDto;
+            }
+
+            return null;
+        }
+        */
+
         public async Task<PersonaDto> Add(PersonaInsertDto personaInsertDto)
         {
             var persona = new Persona()
@@ -119,7 +141,5 @@ namespace PruebaAspirantes.Services
         }
 
         
-
-       
     }
 }

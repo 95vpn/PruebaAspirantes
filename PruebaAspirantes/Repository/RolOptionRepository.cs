@@ -19,6 +19,10 @@ namespace PruebaAspirantes.Repository
         public async Task<RolOpcion> GetById(int id) =>
             await _context.RolOpciones.FindAsync(id);
 
+        /*
+        public async Task<RolOpcion> GetById(params object[] keyValues) =>
+            await _context.RolOpciones.FindAsync(keyValues);
+        */
 
         public async Task Add(RolOpcion rolOpcion) =>
             await _context.RolOpciones.AddAsync(rolOpcion);

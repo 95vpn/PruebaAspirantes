@@ -54,7 +54,27 @@ namespace PruebaAspirantes.Services
             }
             return null;
         }
+        /*
+        public async Task<UsuarioDto> GetById(params object[] keyValues)
+        {
+            var usuario = await _usuarioRepository.GetById(keyValues);
 
+            if (usuario != null)
+            {
+                var usuarioDto = new UsuarioDto
+                {
+                    IdUsuario = usuario.IdUsuario,
+                    UserName = usuario.UserName,
+                    Password = usuario.Password,
+                    Email = usuario.Email,
+                    IdPersona = usuario.IdPersona,
+                };
+
+                return usuarioDto;
+            }
+            return null;
+        }
+        */
         public async Task<UsuarioDto> Add(UsuarioInsertDto usuarioInsertDto)
         {
             

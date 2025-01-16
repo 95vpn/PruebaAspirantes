@@ -22,9 +22,9 @@ namespace PruebaAspirantes.Controllers
             await _rolOptionService.Get();
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<RolOptionDto>> GetById(int Id)
+        public async Task<ActionResult<RolOptionDto>> GetById(int id)
         {
-            var rolOptionDto = await _rolOptionService.GetById(Id);
+            var rolOptionDto = await _rolOptionService.GetById(id);
 
             return rolOptionDto == null ? NotFound() : Ok(rolOptionDto);
         }
@@ -38,7 +38,7 @@ namespace PruebaAspirantes.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<RolOpcion>> Update(int id, RolOptionUpdateDto rolOptionUpdateDto)
+        public async Task<ActionResult<RolOptionDto>> Update(int id, RolOptionUpdateDto rolOptionUpdateDto)
         {
             var rolOptionDto = await _rolOptionService.Update(id, rolOptionUpdateDto);
 

@@ -43,7 +43,7 @@ namespace PruebaAspirantes.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Rol>> Update(int id, RolUpdateDto rolUpdateDto)
+        public async Task<ActionResult<RolDto>> Update(int id, RolUpdateDto rolUpdateDto)
         {
             var rolDto = await _rolService.Update(id, rolUpdateDto);
 

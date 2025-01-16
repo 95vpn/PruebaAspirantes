@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PruebaAspirantes.Models;
 
@@ -10,9 +11,11 @@ using PruebaAspirantes.Models;
 namespace PruebaAspirantes.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250116174405_relacionMuchosaMuchosRolRolOpcion")]
+    partial class relacionMuchosaMuchosRolRolOpcion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,23 +83,17 @@ namespace PruebaAspirantes.Migrations
 
             modelBuilder.Entity("PruebaAspirantes.Models.RolRolOpcion", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("IdRol")
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
 
                     b.Property<int>("IdOption")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(1);
 
-                    b.Property<int>("IdRol")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("IdRol", "IdOption");
 
                     b.HasIndex("IdOption");
-
-                    b.HasIndex("IdRol");
 
                     b.ToTable("RolRolOpciones");
                 });

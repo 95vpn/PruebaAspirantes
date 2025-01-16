@@ -16,6 +16,12 @@ namespace PruebaAspirantes.Repository
 
         public async Task<Persona> GetById(int id) =>
             await _context.Personas.FindAsync(id);
+
+        /*
+        public async Task<Persona> GetById(params object[] keyValues) =>
+            await _context.Personas.FindAsync(keyValues);
+        */
+
         public async Task Add(Persona persona) =>
             await _context.Personas.AddAsync(persona);
 
@@ -31,7 +37,6 @@ namespace PruebaAspirantes.Repository
 
         public async Task Save() =>
             await _context.SaveChangesAsync();
-        
 
         
     }

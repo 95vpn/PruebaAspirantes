@@ -48,6 +48,23 @@ namespace PruebaAspirantes.Services
             return null;
         }
 
+        /*
+        public async Task<RolDto> GetById(params object[] keyValues)
+        {
+            var rol = await _rolRepository.GetById(keyValues);
+
+            if (rol != null)
+            {
+                var rolDto = new RolDto
+                {
+                    IdRol = rol.IdRol,
+                    RolName = rol.RolName
+                };
+                return rolDto;
+            }
+            return null;
+        }
+        */
         public async Task<RolDto> Add(RolIsertDto rolInsertDto)
         {
             var rol = new Rol()
@@ -110,8 +127,6 @@ namespace PruebaAspirantes.Services
             return null;
         }
 
-
-
-
+        
     }
 }

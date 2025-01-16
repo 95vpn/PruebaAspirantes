@@ -18,6 +18,11 @@ namespace PruebaAspirantes.Repository
         public async Task<Rol> GetById(int id) => 
             await _context.Roles.FindAsync(id);
 
+        /*
+        public async Task<Rol> GetById(params object[] keyValues) =>
+            await _context.Roles.FindAsync(keyValues);
+        */
+
         public async Task Add(Rol rol) =>
             await _context.Roles.AddAsync(rol);
 
@@ -36,6 +41,7 @@ namespace PruebaAspirantes.Repository
         
         public async Task Save() =>
             await _context.SaveChangesAsync();
+
         
     }
 }

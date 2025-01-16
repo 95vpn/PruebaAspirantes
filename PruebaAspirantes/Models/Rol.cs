@@ -9,5 +9,7 @@ namespace PruebaAspirantes.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdRol { get; set; }
         public string? RolName { get; set; }
+
+        public virtual ICollection<RolRolOpcion>? RolRolOpciones { get; set; }
     }
 }

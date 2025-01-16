@@ -9,5 +9,7 @@
         void Delete(TEntity entity);
 
         Task Save();
+
+       
     }
 }

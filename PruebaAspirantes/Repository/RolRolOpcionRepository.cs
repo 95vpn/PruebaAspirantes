@@ -1,37 +1,56 @@
-﻿using PruebaAspirantes.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PruebaAspirantes.Models;
 
 namespace PruebaAspirantes.Repository
 {
-    public class RolRolOpcionRepository : IRepository<RolRolOpcion>
+    public class RolRolOpcionRepository : IRolRolOpcionRepository
     {
-        public Task Add(RolRolOpcion entity)
+        private StoreContext _context;
+
+        public RolRolOpcionRepository(StoreContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public void Delete(RolRolOpcion entity)
+        public async Task<IEnumerable<RolRolOpcion>> Get() =>
+             await _context.RolRolOpciones.ToListAsync();
+
+        public async Task<RolRolOpcion> GetById(int id) =>
+            await _context.RolRolOpciones.FindAsync(id);
+        /*
+        public async Task<RolRolOpcion> GetById(params object[] keyValues) =>
+            await _context.RolRolOpciones.FindAsync(keyValues);
+        */
+
+        public async Task Add(RolRolOpcion rolRolOpcion) =>
+            await _context.RolRolOpciones.AddAsync(rolRolOpcion);
+
+        public void Update(RolRolOpcion rolRolOpcion)
         {
-            throw new NotImplementedException();
+            _context.RolRolOpciones.Attach(rolRolOpcion);
+            _context.RolRolOpciones.Entry(rolRolOpcion).State = EntityState.Modified;
         }
 
-        public Task<IEnumerable<RolRolOpcion>> Get()
+        public void Delete(RolRolOpcion rolRolOpcion)
         {
-            throw new NotImplementedException();
+            _context.RolRolOpciones.Remove(rolRolOpcion);
         }
 
-        public Task<RolRolOpcion> GetById(int id)
+        
+
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
 
-        public Task Save()
+        public async Task<bool> ExisteRol(int idRol)
         {
-            throw new NotImplementedException();
+            return await _context.Roles.AnyAsync(r => r.IdRol == idRol);
         }
 
-        public void Update(RolRolOpcion entity)
+        public async Task<bool> ExisteOpcion(int idOption)
         {
-            throw new NotImplementedException();
+            return await _context.RolOpciones.AnyAsync(o => o.IdOpcion == idOption);
         }
     }
 }

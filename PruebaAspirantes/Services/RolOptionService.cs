@@ -41,6 +41,25 @@ namespace PruebaAspirantes.Services
             return null;
         }
 
+        /*
+        public async Task<RolOptionDto> GetById(params object[] keyValues)
+        {
+            var rolOption = await _rolOptionRepository.GetById(keyValues);
+
+            if (rolOption != null)
+            {
+                var rolOptionDto = new RolOptionDto()
+                {
+                    IdOpcion = rolOption.IdOpcion,
+                    NameOption = rolOption.NameOption,
+                };
+                return rolOptionDto;
+            }
+
+            return null;
+        }
+        */
+
         public async Task<RolOptionDto> Add(RolOptionInsertDto rolOptionInsertDto)
         {
             var rolOption = new RolOpcion()
@@ -101,8 +120,6 @@ namespace PruebaAspirantes.Services
             }
             return null;
         }
-
-        
 
         
     }

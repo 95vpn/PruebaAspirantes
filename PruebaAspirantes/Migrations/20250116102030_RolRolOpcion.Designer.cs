@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PruebaAspirantes.Models;
 
@@ -10,9 +11,11 @@ using PruebaAspirantes.Models;
 namespace PruebaAspirantes.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250116102030_RolRolOpcion")]
+    partial class RolRolOpcion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,23 +83,16 @@ namespace PruebaAspirantes.Migrations
 
             modelBuilder.Entity("PruebaAspirantes.Models.RolRolOpcion", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("IdRol")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("IdOption")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdRol")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("IdRol", "IdOption");
 
                     b.HasIndex("IdOption");
-
-                    b.HasIndex("IdRol");
 
                     b.ToTable("RolRolOpciones");
                 });
@@ -177,13 +173,13 @@ namespace PruebaAspirantes.Migrations
             modelBuilder.Entity("PruebaAspirantes.Models.RolRolOpcion", b =>
                 {
                     b.HasOne("PruebaAspirantes.Models.RolOpcion", "RolOpcion")
-                        .WithMany("RolRolOpciones")
+                        .WithMany()
                         .HasForeignKey("IdOption")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PruebaAspirantes.Models.Rol", "Rol")
-                        .WithMany("RolRolOpciones")
+                        .WithMany()
                         .HasForeignKey("IdRol")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -232,16 +228,6 @@ namespace PruebaAspirantes.Migrations
                         .IsRequired();
 
                     b.Navigation("Persona");
-                });
-
-            modelBuilder.Entity("PruebaAspirantes.Models.Rol", b =>
-                {
-                    b.Navigation("RolRolOpciones");
-                });
-
-            modelBuilder.Entity("PruebaAspirantes.Models.RolOpcion", b =>
-                {
-                    b.Navigation("RolRolOpciones");
                 });
 #pragma warning restore 612, 618
         }
