@@ -20,6 +20,7 @@ builder.Services.AddKeyedScoped<ICommonService<UsuarioDto, UsuarioInsertDto, Usu
 builder.Services.AddKeyedScoped<ICommonService<RolDto, RolIsertDto, RolUpdateDto>, RolService>("rolService");
 builder.Services.AddKeyedScoped<ICommonService<RolOptionDto, RolOptionInsertDto, RolOptionUpdateDto>, RolOptionService>("rolOptionService");
 builder.Services.AddKeyedScoped<ICommonService<RolRolOpcionDto, RolRolOpcionInsertDto, RolRolOpcionUpdateDto>, RolRolOpcionService>("rolRolOpcionService");
+builder.Services.AddKeyedScoped<ICommonService<RolUsuarioDto, RolUsuarioInsertDto, RolUsuarioUpdateDto>, RolUsuarioService>("rolUsuarioService");
 
 //repository
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IRepository<Rol>, RolRepository>();
 builder.Services.AddScoped<IRepository<RolOpcion>, RolOptionRepository>();
 builder.Services.AddScoped<IRepository<RolRolOpcion>, RolRolOpcionRepository>();
 builder.Services.AddScoped<IRolRolOpcionRepository, RolRolOpcionRepository>();
+builder.Services.AddScoped<IRepository<RolUsuario>, RolUsuarioRepository>();
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>
 {

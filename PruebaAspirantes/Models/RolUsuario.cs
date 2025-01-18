@@ -7,6 +7,9 @@ namespace PruebaAspirantes.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
+
         public int IdRol {  get; set; }
 
         public int IdUsuario { get; set; }

@@ -31,6 +31,22 @@ namespace PruebaAspirantes.Models
                 .WithMany(ro => ro.RolRolOpciones)
                 .HasForeignKey(rro => rro.IdOption);
 
+            ///////////////////Configuracion para RolUsuario
+
+            modelBuilder.Entity<RolUsuario>()
+                .HasKey(ru => ru.Id);
+
+            modelBuilder.Entity<RolUsuario>()
+                .HasOne(ru => ru.Rol)
+                .WithMany(r => r.RolUsuarios)
+                .HasForeignKey(ru => ru.IdRol);
+
+            modelBuilder.Entity<RolUsuario>()
+                .HasOne(ru => ru.Usuario)
+                .WithMany(u => u.RolUsuarios)
+                .HasForeignKey(ru => ru.IdUsuario);
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

@@ -11,5 +11,6 @@ namespace PruebaAspirantes.Models
         public string? RolName { get; set; }
 
         public virtual ICollection<RolRolOpcion>? RolRolOpciones { get; set; }
+        public virtual ICollection<RolUsuario>? RolUsuarios { get; set; }
     }
 }

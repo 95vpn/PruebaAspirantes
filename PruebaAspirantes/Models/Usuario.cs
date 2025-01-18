@@ -17,5 +17,7 @@ namespace PruebaAspirantes.Models
 
         [ForeignKey("IdPersona")]
         public virtual Persona? Persona { get; set; }
+
+        public virtual ICollection<RolUsuario>? RolUsuarios { get; set; }
     }
 }
