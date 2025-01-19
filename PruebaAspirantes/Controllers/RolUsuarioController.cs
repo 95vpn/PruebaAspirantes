@@ -31,10 +31,25 @@ namespace PruebaAspirantes.Controllers
         [HttpPost]
         public async Task<ActionResult<RolUsuarioDto>> Add(RolUsuarioInsertDto rolUsuarioInsertDto)
         {
-            var rolInsertDto = await _rolUsuarioService.Add(rolUsuarioInsertDto);
+            var rolUsuarioDto = await _rolUsuarioService.Add(rolUsuarioInsertDto);
 
-            return rolInsertDto == null ? NotFound() : Ok(rolInsertDto);
+            return rolUsuarioDto == null ? NotFound() : Ok(rolUsuarioDto);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<RolUsuarioDto>> Update(int id, RolUsuarioUpdateDto rolUsuarioUpdateDto)
+        {
+            var rolUsuarioDto = await _rolUsuarioService.Update(id, rolUsuarioUpdateDto);
+
+            return rolUsuarioDto == null? NotFound() : Ok( rolUsuarioDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        { 
+            var rolUsuarioDto = await _rolUsuarioService.Delete(id);
+
+            return rolUsuarioDto == null ? NotFound() : Ok(rolUsuarioDto);
+        }
     }
 }

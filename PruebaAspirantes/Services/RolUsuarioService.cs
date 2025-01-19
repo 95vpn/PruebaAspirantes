@@ -45,6 +45,16 @@ namespace PruebaAspirantes.Services
 
         public async Task<RolUsuarioDto> Add(RolUsuarioInsertDto rolUsuarioInsertDto)
         {
+            var rolUsuarios = await _rolUsuarioRepository.Get();
+            var existeRelacion = rolUsuarios.Any(ru => 
+                ru.IdRol == rolUsuarioInsertDto.IdRol && ru.IdUsuario == rolUsuarioInsertDto.IdUsuario);
+
+            if (existeRelacion) 
+            {
+                throw new InvalidOperationException("La relacion ya existe");
+            }
+
+
             var rolUsuario = new RolUsuario()
             {
                 IdRol = rolUsuarioInsertDto.IdRol,
@@ -64,16 +74,58 @@ namespace PruebaAspirantes.Services
             return rolUsuarioDto;
         }
 
-        public Task<RolUsuarioDto> Delete(int id)
+        public async Task<RolUsuarioDto> Update(int id, RolUsuarioUpdateDto rolUsuarioUpdateDto)
         {
-            throw new NotImplementedException();
+            var rolUsuarios = await _rolUsuarioRepository.Get();
+            var existeRelacion = rolUsuarios.Any(ru =>
+                ru.IdRol == rolUsuarioUpdateDto.IdRol && ru.IdUsuario == rolUsuarioUpdateDto.IdUsuario);
+
+            if (existeRelacion)
+            {
+                throw new InvalidOperationException("La relacion ya existe");
+            }
+
+            var rolUsuario = await _rolUsuarioRepository.GetById(id);
+            if (rolUsuario != null)
+            {
+                rolUsuario.IdRol = rolUsuarioUpdateDto.IdRol;
+                rolUsuario.IdUsuario = rolUsuarioUpdateDto.IdUsuario;
+
+                _rolUsuarioRepository.Update(rolUsuario);
+                await _rolUsuarioRepository.Save();
+
+                var rolUsuarioDto = new RolUsuarioDto()
+                {
+                    Id = rolUsuario.Id,
+                    IdRol = rolUsuario.IdRol,
+                    IdUsuario = rolUsuario.IdUsuario,
+                };
+
+                return rolUsuarioDto;
+            }
+            return null;
         }
 
-        
-
-        public Task<RolUsuarioDto> Update(int id, RolUsuarioUpdateDto personaUpdateDto)
+        public async Task<RolUsuarioDto> Delete(int id)
         {
-            throw new NotImplementedException();
+            var rolUsuario = await _rolUsuarioRepository.GetById(id);
+
+            if (rolUsuario != null)
+            {
+                var rolUsuarioDto = new RolUsuarioDto()
+                {
+                    Id = rolUsuario.Id,
+                    IdRol = rolUsuario.IdRol,
+                    IdUsuario = rolUsuario.IdUsuario
+                };
+
+                _rolUsuarioRepository.Delete(rolUsuario);
+                await _rolUsuarioRepository.Save();
+
+                return rolUsuarioDto;
+            }
+            return null;
         }
+
     }
 }

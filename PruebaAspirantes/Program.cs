@@ -30,6 +30,7 @@ builder.Services.AddScoped<IRepository<RolOpcion>, RolOptionRepository>();
 builder.Services.AddScoped<IRepository<RolRolOpcion>, RolRolOpcionRepository>();
 builder.Services.AddScoped<IRolRolOpcionRepository, RolRolOpcionRepository>();
 builder.Services.AddScoped<IRepository<RolUsuario>, RolUsuarioRepository>();
+builder.Services.AddScoped<IRepository<Session>, SessionRepository>();
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>
 {
