@@ -21,6 +21,7 @@ builder.Services.AddKeyedScoped<ICommonService<RolDto, RolIsertDto, RolUpdateDto
 builder.Services.AddKeyedScoped<ICommonService<RolOptionDto, RolOptionInsertDto, RolOptionUpdateDto>, RolOptionService>("rolOptionService");
 builder.Services.AddKeyedScoped<ICommonService<RolRolOpcionDto, RolRolOpcionInsertDto, RolRolOpcionUpdateDto>, RolRolOpcionService>("rolRolOpcionService");
 builder.Services.AddKeyedScoped<ICommonService<RolUsuarioDto, RolUsuarioInsertDto, RolUsuarioUpdateDto>, RolUsuarioService>("rolUsuarioService");
+builder.Services.AddKeyedScoped<ICommonService<SessionDto, SessionInsertDto, SessionUpdateDto>, SessionService>("sessionService");
 
 //repository
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();

@@ -1,37 +1,45 @@
-﻿using PruebaAspirantes.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PruebaAspirantes.Models;
 
 namespace PruebaAspirantes.Repository
 {
     public class SessionRepository : IRepository<Session>
     {
-        public Task Add(Session entity)
+        private StoreContext _context;
+
+        public SessionRepository(StoreContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
         }
 
-        public void Delete(Session entity)
+        public async Task<IEnumerable<Session>> Get() =>
+            await _context.Sessions.ToListAsync();
+
+        public async Task<Session> GetById(int id) =>
+            await _context.Sessions.FindAsync(id);
+
+        public async Task Add(Session session) =>
+            await _context.Sessions.AddAsync(session);
+
+        public void Update(Session session)
         {
-            throw new NotImplementedException();
+            _context.Sessions.Attach(session);
+            _context.Sessions.Entry(session).State = EntityState.Modified;
+
         }
 
-        public Task<IEnumerable<Session>> Get()
+        public void Delete(Session session)
         {
-            throw new NotImplementedException();
+            _context.Sessions.Remove(session);
         }
 
-        public Task<Session> GetById(int id)
+        
+
+        public async Task Save()
         {
-            throw new NotImplementedException();
+            await _context.SaveChangesAsync();
         }
 
-        public Task Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Session entity)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
