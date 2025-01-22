@@ -16,17 +16,20 @@ namespace PruebaAspirantes.Controllers
         private IValidator<UsuarioInsertDto> _usuarioInsertValidator;
         private IValidator<UsuarioUpdateDto> _usuarioUpdateValidator;
         private ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> _usuarioService;
+        private ILoginService _loginService;
         
 
         public UsuarioController(
             IValidator<UsuarioInsertDto> usuarioInsertValidator,
             IValidator<UsuarioUpdateDto> usuarioUpdateValidator,
-            [FromKeyedServices("usuarioService")] ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> usuarioService)
+            [FromKeyedServices("usuarioService")] ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> usuarioService,
+            ILoginService loginService)
         {
             
             _usuarioInsertValidator = usuarioInsertValidator;
             _usuarioUpdateValidator = usuarioUpdateValidator;
             _usuarioService = usuarioService;
+            _loginService = loginService;
         }
 
         [HttpGet]
@@ -53,9 +56,6 @@ namespace PruebaAspirantes.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            
-
-            
 
             var usuarioDto = await _usuarioService.Add(usuarioInsertDto);
 
@@ -84,6 +84,17 @@ namespace PruebaAspirantes.Controllers
             var usuarioDto = await _usuarioService.Delete(id);
 
             return usuarioDto == null ? NotFound() : Ok(usuarioDto);
+        }
+
+        [HttpPost("login")]
+        public IActionResult Auntentificar([FromBody] LoginDto loginDto)
+        {
+            var loginTokenDto = _loginService.Auth(loginDto);
+
+            if (loginTokenDto == null)
+                BadRequest();
+
+            return Ok(loginTokenDto);
         }
     }
 }

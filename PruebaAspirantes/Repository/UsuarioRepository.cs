@@ -18,10 +18,7 @@ namespace PruebaAspirantes.Repository
 
         public async Task<Usuario> GetById(int id) =>
             await _context.Usuarios.FindAsync(id);
-        /*
-        public async Task<Usuario> GetById(params object[] keyValues) =>
-            await _context.Usuarios.FindAsync(keyValues);
-        */
+       
 
         public async Task Add(Usuario usuario) =>
             await _context.Usuarios.AddAsync(usuario);
