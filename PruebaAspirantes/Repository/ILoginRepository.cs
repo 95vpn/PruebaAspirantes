@@ -6,6 +6,6 @@ namespace PruebaAspirantes.Repository
     {
         Usuario ? GetUsuarioByEmailAndPassword(string email, string password);
 
-        Usuario ? GetUsuarioByEmail(string email);
+        
     }
 }

@@ -55,6 +55,8 @@ var appSettingSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSetting>(appSettingSection);
 
 var appSetting = appSettingSection.Get<AppSetting>();
+
+
 var llave = Encoding.ASCII.GetBytes(appSetting.Secreto);
 
 builder.Services.AddAuthentication(d =>

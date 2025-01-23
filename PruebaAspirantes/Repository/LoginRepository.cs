@@ -6,16 +6,14 @@ namespace PruebaAspirantes.Repository
     {
 
         private StoreContext _context;
+        
 
         public LoginRepository(StoreContext context)
         {
             _context = context;
         }
 
-        public Usuario? GetUsuarioByEmail(string email)
-        {
-            return _context.Usuarios.FirstOrDefault(u => u.Email == email);
-        }
+        
 
         public Usuario? GetUsuarioByEmailAndPassword(string email, string password)
         {

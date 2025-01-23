@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PruebaAspirantes.DTOs;
 using PruebaAspirantes.Models;
 using PruebaAspirantes.Repository;
+using PruebaAspirantes.Tools;
 
 namespace PruebaAspirantes.Services
 {
@@ -54,27 +55,7 @@ namespace PruebaAspirantes.Services
             }
             return null;
         }
-        /*
-        public async Task<UsuarioDto> GetById(params object[] keyValues)
-        {
-            var usuario = await _usuarioRepository.GetById(keyValues);
-
-            if (usuario != null)
-            {
-                var usuarioDto = new UsuarioDto
-                {
-                    IdUsuario = usuario.IdUsuario,
-                    UserName = usuario.UserName,
-                    Password = usuario.Password,
-                    Email = usuario.Email,
-                    IdPersona = usuario.IdPersona,
-                };
-
-                return usuarioDto;
-            }
-            return null;
-        }
-        */
+        
         public async Task<UsuarioDto> Add(UsuarioInsertDto usuarioInsertDto)
         {
             
@@ -98,7 +79,7 @@ namespace PruebaAspirantes.Services
             var usuario = new Usuario()
             {
                 UserName = usuarioInsertDto.UserName,
-                Password = usuarioInsertDto.Password,
+                Password = Encrypt.GetSHA256(usuarioInsertDto.Password),
                 IdPersona = usuarioInsertDto.IdPersona,
                 Email = emailUnico,
             };
