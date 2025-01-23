@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using PruebaAspirantes.DTOs;
+using PruebaAspirantes.Repository;
 
 namespace PruebaAspirantes.Validators
 {
@@ -21,5 +23,7 @@ namespace PruebaAspirantes.Validators
             var pattern = @"(\d)\1{3}";
             return !Regex.IsMatch(identificacion, pattern);
         }
+
+        
     }
 }

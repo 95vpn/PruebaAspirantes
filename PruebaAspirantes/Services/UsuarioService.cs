@@ -32,6 +32,7 @@ namespace PruebaAspirantes.Services
                 UserName = u.UserName,
                 Password = u.Password,
                 Email = u.Email,
+                SessionActive = u.SessionActive,
                 IdPersona = u.IdPersona,
             });
         }
@@ -47,7 +48,9 @@ namespace PruebaAspirantes.Services
                     IdUsuario = usuario.IdUsuario,
                     UserName = usuario.UserName,
                     Password = usuario.Password,
+                    SessionActive = usuario.SessionActive,
                     Email = usuario.Email,
+                    
                     IdPersona = usuario.IdPersona,
                 };
 
@@ -81,6 +84,7 @@ namespace PruebaAspirantes.Services
                 UserName = usuarioInsertDto.UserName,
                 Password = Encrypt.GetSHA256(usuarioInsertDto.Password),
                 IdPersona = usuarioInsertDto.IdPersona,
+                SessionActive = usuarioInsertDto.SessionActive,
                 Email = emailUnico,
             };
 
@@ -93,6 +97,7 @@ namespace PruebaAspirantes.Services
                 UserName = usuario.UserName,
                 Password = usuario.Password,
                 IdPersona = usuario.IdPersona,
+                SessionActive = usuario.SessionActive,
                 Email = usuario.Email
             };
 

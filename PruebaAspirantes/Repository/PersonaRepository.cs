@@ -3,7 +3,7 @@ using PruebaAspirantes.Models;
 
 namespace PruebaAspirantes.Repository
 {
-    public class PersonaRepository : IRepository<Persona>
+    public class PersonaRepository : IPersonaRepository
     {
         private StoreContext _context;
 
@@ -38,6 +38,9 @@ namespace PruebaAspirantes.Repository
         public async Task Save() =>
             await _context.SaveChangesAsync();
 
-        
+        public async Task<bool> ExisteIdentificacion(string identificacion)
+        {
+            return await _context.Personas.AnyAsync(p => p.Identificacion == identificacion);
+        }
     }
 }

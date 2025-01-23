@@ -8,12 +8,14 @@ namespace PruebaAspirantes.Services
     public class PersonaService : ICommonService<PersonaDto, PersonaInsertDto, PersonaUpdateDto>
     {
         
-        private IRepository<Persona> _personaRepository;
+        //private IRepository<Persona> _personaRepository;
+        private IPersonaRepository _personaRepository;
 
-        public PersonaService(IRepository<Persona> personaRepoitory)
+        public PersonaService(
+            IPersonaRepository personaRepository)
         {
             
-            _personaRepository = personaRepoitory;
+            _personaRepository = personaRepository;
         }
 
         public async Task<IEnumerable<PersonaDto>> Get()
@@ -73,6 +75,14 @@ namespace PruebaAspirantes.Services
 
         public async Task<PersonaDto> Add(PersonaInsertDto personaInsertDto)
         {
+
+            var existeIdentificacion = await _personaRepository.ExisteIdentificacion(personaInsertDto.Identificacion);
+
+            if  (existeIdentificacion)
+            {
+                throw new Exception("La identificacion ya existe en el sistema");
+            }
+
             var persona = new Persona()
             {
                 Names = personaInsertDto.Names,

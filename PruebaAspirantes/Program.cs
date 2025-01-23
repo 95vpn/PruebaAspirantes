@@ -34,6 +34,7 @@ builder.Services.AddScoped<IRepository<Rol>, RolRepository>();
 builder.Services.AddScoped<IRepository<RolOpcion>, RolOptionRepository>();
 builder.Services.AddScoped<IRepository<RolRolOpcion>, RolRolOpcionRepository>();
 builder.Services.AddScoped<IRolRolOpcionRepository, RolRolOpcionRepository>();
+builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IRepository<RolUsuario>, RolUsuarioRepository>();
 builder.Services.AddScoped<IRepository<Session>, SessionRepository>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();

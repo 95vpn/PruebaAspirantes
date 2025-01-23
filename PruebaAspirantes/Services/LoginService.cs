@@ -44,8 +44,8 @@ namespace PruebaAspirantes.Services
                 };
             }
 
-            var sessionActiva = _usuarioRepository.GetById(usuario.IdUsuario);
-            if (sessionActiva != null)
+            var sessionActiva = _loginRepository.GetUsuarioById(usuario.IdUsuario);
+            if (sessionActiva !=null && sessionActiva.SessionActive == "true" )
             {
                 return new LoginTokenDto
                 {
@@ -55,9 +55,20 @@ namespace PruebaAspirantes.Services
                 };
             }
 
-            
+            usuario.SessionActive = "true"; 
+            _loginRepository.Update(usuario); 
+            _loginRepository.Save();
 
 
+            var nuevaSession = new Session
+            {
+                FechaIngreso = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+                FechaCierre = null,
+                IdUsuario = usuario.IdUsuario,
+            };
+
+            _loginRepository.Add(nuevaSession);
+            _loginRepository.Save();
 
 
             return new LoginTokenDto
