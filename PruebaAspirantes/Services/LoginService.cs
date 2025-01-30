@@ -25,10 +25,10 @@ namespace PruebaAspirantes.Services
             _appSetting = appSetting.Value;
             _usuarioRepository = usuarioRepository;
         }
-        public LoginTokenDto Auth(LoginDto loginDto)
+        public  LoginTokenDto Auth(LoginDto loginDto)
         {
 
-
+            
             string EncryptedPassword = Encrypt.GetSHA256(loginDto.Password);
 
             var usuario = _loginRepository.GetUsuarioByEmailAndPassword(loginDto.Email, EncryptedPassword);
@@ -42,6 +42,19 @@ namespace PruebaAspirantes.Services
                     Email = null,
                     Token = "Credenciales inválidas"
                 };
+            }
+
+            var usuarioEmail = _loginRepository.GetUsuarioByEmail(loginDto.Email);
+            if (usuarioEmail != null)
+            {
+                usuarioEmail.IntentosFallidos = 0;
+                usuarioEmail.IntentosFallidos++;
+                if(usuarioEmail.IntentosFallidos > 3)
+                {
+                    usuarioEmail.Status = "bloqueado";
+                    _loginRepository.Update(usuarioEmail);
+                    _loginRepository.Save();
+                }
             }
 
             var sessionActiva = _loginRepository.GetUsuarioById(usuario.IdUsuario);
@@ -78,6 +91,27 @@ namespace PruebaAspirantes.Services
                 Token = GetToken(usuario) 
             };
 
+        }
+
+        public void Logout(int userId)
+        {
+            var session = _loginRepository.SessionActiva(userId);
+
+            if (session != null)
+            {
+                session.FechaCierre = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+                _loginRepository.Update(session);
+                _loginRepository.Save();
+
+            }
+
+            var usuario = _loginRepository.GetUsuarioById(userId);
+            if (usuario != null)
+            {
+                usuario.SessionActive = "false";
+                _loginRepository.Update(usuario);
+                _loginRepository.Save();
+            }
         }
 
         private string GetToken(Usuario usuario)

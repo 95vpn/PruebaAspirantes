@@ -21,6 +21,11 @@ namespace PruebaAspirantes.Repository
             return _context.Usuarios.FirstOrDefault(u => u.Email == email && u.Password == password);
         }
 
+        public Usuario? GetUsuarioByEmail(string email)
+        {
+            return _context?.Usuarios.FirstOrDefault(u => u.Email == email);
+        }
+
         public Usuario ? GetUsuarioById(int id)
         {
             return _context.Usuarios.FirstOrDefault(u => u.IdUsuario == id);
@@ -48,5 +53,14 @@ namespace PruebaAspirantes.Repository
         {
             return _context.Sessions.FirstOrDefault(s => s.IdUsuario == id && s.FechaCierre == null );
         }
+
+        public void Update(Session session)
+        {
+       
+            _context.Sessions.Attach(session);
+            _context.Sessions.Entry(session).State = EntityState.Modified;
+        }
+
+        
     }
 }

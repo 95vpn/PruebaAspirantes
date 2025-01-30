@@ -7,6 +7,9 @@
         public string? Password { get; set; }
         public string? Email { get; set; }
         public string? SessionActive { get; set; }
+
+        public string? Status { get; set; }
+        public int? IntentosFallidos { get; set; }
         public int IdPersona { get; set; }
     }
 }

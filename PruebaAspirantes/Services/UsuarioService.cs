@@ -33,6 +33,8 @@ namespace PruebaAspirantes.Services
                 Password = u.Password,
                 Email = u.Email,
                 SessionActive = u.SessionActive,
+                Status = u.Status,
+                IntentosFallidos  = u.IntentosFallidos,
                 IdPersona = u.IdPersona,
             });
         }
@@ -49,6 +51,8 @@ namespace PruebaAspirantes.Services
                     UserName = usuario.UserName,
                     Password = usuario.Password,
                     SessionActive = usuario.SessionActive,
+                    Status = usuario.Status,
+                    IntentosFallidos = usuario.IntentosFallidos,
                     Email = usuario.Email,
                     
                     IdPersona = usuario.IdPersona,
@@ -98,6 +102,8 @@ namespace PruebaAspirantes.Services
                 Password = usuario.Password,
                 IdPersona = usuario.IdPersona,
                 SessionActive = usuario.SessionActive,
+                Status = usuario.Status,
+                IntentosFallidos = usuario.IntentosFallidos,
                 Email = usuario.Email
             };
 

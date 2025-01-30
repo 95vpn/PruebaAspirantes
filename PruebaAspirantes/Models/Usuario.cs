@@ -13,7 +13,10 @@ namespace PruebaAspirantes.Models
         public string? Email { get; set; }
         public string? SessionActive { get; set; }
         public string? Status { get; set; }
+        public int ? IntentosFallidos { get; set; }
         public int IdPersona { get; set; }  
+
+
 
         [ForeignKey("IdPersona")]
         public virtual Persona? Persona { get; set; }

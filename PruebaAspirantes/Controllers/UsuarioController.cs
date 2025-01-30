@@ -87,7 +87,7 @@ namespace PruebaAspirantes.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Auntentificar([FromBody] LoginDto loginDto)
+        public IActionResult Auntenticar([FromBody] LoginDto loginDto)
         {
             var loginTokenDto = _loginService.Auth(loginDto);
 
@@ -96,5 +96,14 @@ namespace PruebaAspirantes.Controllers
 
             return Ok(loginTokenDto);
         }
+
+        [HttpPost("logout/{userId}")]
+        public IActionResult Logout(int userId)
+        {
+            _loginService.Logout(userId);
+            return Ok(new {message = "Session cerrada correctamente"});
+
+        }
+
     }
 }

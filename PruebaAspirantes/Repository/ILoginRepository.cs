@@ -6,6 +6,8 @@ namespace PruebaAspirantes.Repository
     {
         Usuario ? GetUsuarioByEmailAndPassword(string email, string password);
 
+        Usuario ? GetUsuarioByEmail(string email);
+
         Usuario ? GetUsuarioById(int id);
 
         Session ? SessionActiva(int id);
@@ -13,7 +15,9 @@ namespace PruebaAspirantes.Repository
         Task Add(Session session);
 
         void Update(Usuario usuario);
-       
+
+        void Update(Session session);
+
         Task Save();
     }
 }
