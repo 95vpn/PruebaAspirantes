@@ -25,17 +25,32 @@ namespace PruebaAspirantes.Services
             _appSetting = appSetting.Value;
             _usuarioRepository = usuarioRepository;
         }
-        public  LoginTokenDto Auth(LoginDto loginDto)
+        public async  Task<LoginTokenDto> Auth(LoginDto loginDto)
         {
 
             
             string EncryptedPassword = Encrypt.GetSHA256(loginDto.Password);
 
-            var usuario = _loginRepository.GetUsuarioByEmailAndPassword(loginDto.Email, EncryptedPassword);
+            var usuario = await _loginRepository.GetUsuarioByEmailAndPassword(loginDto.Email, EncryptedPassword);
 
             
             if (usuario == null)
             {
+                
+                var usuarioEmail = await _loginRepository.GetUsuarioByEmail(loginDto.Email);
+                if (usuarioEmail != null)
+                {
+                    
+                    usuarioEmail.IntentosFallidos++;
+                    if (usuarioEmail.IntentosFallidos >= 3)
+                    {
+                        usuarioEmail.Status = "bloqueado";
+                        
+                    }
+                    _loginRepository.Update(usuarioEmail);
+                    await _loginRepository.Save();
+                }
+                
                 return new LoginTokenDto
                 {
                     
@@ -43,22 +58,22 @@ namespace PruebaAspirantes.Services
                     Token = "Credenciales inválidas"
                 };
             }
-
-            var usuarioEmail = _loginRepository.GetUsuarioByEmail(loginDto.Email);
-            if (usuarioEmail != null)
+            
+            if (usuario.Status == "bloqueado")
             {
-                usuarioEmail.IntentosFallidos = 0;
-                usuarioEmail.IntentosFallidos++;
-                if(usuarioEmail.IntentosFallidos > 3)
+                return new LoginTokenDto
                 {
-                    usuarioEmail.Status = "bloqueado";
-                    _loginRepository.Update(usuarioEmail);
-                    _loginRepository.Save();
-                }
+                    IdUsuario = usuario.IdUsuario,
+                    Email = usuario.Email,
+                    Token = "Tu cuenta ha sido bloqueada por demasiados intentos fallidos"
+                };
             }
 
-            var sessionActiva = _loginRepository.GetUsuarioById(usuario.IdUsuario);
-            if (sessionActiva !=null && sessionActiva.SessionActive == "true" )
+            usuario.IntentosFallidos = 0;
+            usuario.SessionActive = "true";
+
+            var sessionActiva = await _loginRepository.GetUsuarioById(usuario.IdUsuario);
+            if (sessionActiva != null && sessionActiva.SessionActive == "true" )
             {
                 return new LoginTokenDto
                 {
@@ -70,7 +85,7 @@ namespace PruebaAspirantes.Services
 
             usuario.SessionActive = "true"; 
             _loginRepository.Update(usuario); 
-            _loginRepository.Save();
+            await _loginRepository.Save();
 
 
             var nuevaSession = new Session
@@ -80,41 +95,43 @@ namespace PruebaAspirantes.Services
                 IdUsuario = usuario.IdUsuario,
             };
 
-            _loginRepository.Add(nuevaSession);
-            _loginRepository.Save();
+            await _loginRepository.Add(nuevaSession);
+            await _loginRepository.Save();
 
 
-            return new LoginTokenDto
+            var loginToken = new LoginTokenDto
             {
                 IdUsuario = usuario.IdUsuario,
                 Email = usuario.Email,
                 Token = GetToken(usuario) 
             };
+            return loginToken;
 
         }
 
-        public void Logout(int userId)
+        public async Task Logout(int userId)
         {
-            var session = _loginRepository.SessionActiva(userId);
+            var session = await _loginRepository.SessionActiva(userId);
 
             if (session != null)
             {
                 session.FechaCierre = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
                 _loginRepository.Update(session);
-                _loginRepository.Save();
+                await _loginRepository.Save();
 
             }
 
-            var usuario = _loginRepository.GetUsuarioById(userId);
+            var usuario = await _loginRepository.GetUsuarioById(userId);
             if (usuario != null)
             {
                 usuario.SessionActive = "false";
                 _loginRepository.Update(usuario);
-                _loginRepository.Save();
+                await _usuarioRepository.Save();
             }
+            
         }
 
-        private string GetToken(Usuario usuario)
+        private  string GetToken(Usuario usuario)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 

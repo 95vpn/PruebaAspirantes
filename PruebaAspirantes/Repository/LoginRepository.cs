@@ -16,42 +16,40 @@ namespace PruebaAspirantes.Repository
 
         
 
-        public Usuario ? GetUsuarioByEmailAndPassword(string email, string password)
+        public async Task<Usuario?> GetUsuarioByEmailAndPassword(string email, string password)
         {
-            return _context.Usuarios.FirstOrDefault(u => u.Email == email && u.Password == password);
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
 
-        public Usuario? GetUsuarioByEmail(string email)
+        public async Task<Usuario?> GetUsuarioByEmail(string email)
         {
-            return _context?.Usuarios.FirstOrDefault(u => u.Email == email);
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public Usuario ? GetUsuarioById(int id)
+        public async Task<Usuario?> GetUsuarioById(int id)
         {
-            return _context.Usuarios.FirstOrDefault(u => u.IdUsuario == id);
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == id);
         }
 
+        public async Task<Session?> SessionActiva(int id)
+        {
+            return await _context.Sessions.FirstOrDefaultAsync(s => s.IdUsuario == id && s.FechaCierre == null);
+        }
+
+        /*
         public void RegisterSession(Session session)
         {
             _context.Sessions.Add(session);
         }
+        */
+
+        public async Task Add(Session session) =>
+            await _context.Sessions.AddAsync(session);
 
         public void Update(Usuario usuario)
         {
             _context.Usuarios.Attach(usuario);
             _context.Usuarios.Entry(usuario).State = EntityState.Modified;
-        }
-
-        public async Task Save() =>
-        
-            await _context.SaveChangesAsync();
-
-        public async Task Add(Session session) =>
-            await _context.Sessions.AddAsync(session);
-
-        public Session? SessionActiva(int id)
-        {
-            return _context.Sessions.FirstOrDefault(s => s.IdUsuario == id && s.FechaCierre == null );
         }
 
         public void Update(Session session)
@@ -61,6 +59,11 @@ namespace PruebaAspirantes.Repository
             _context.Sessions.Entry(session).State = EntityState.Modified;
         }
 
-        
+
+        public async Task Save() =>
+
+            await _context.SaveChangesAsync();
+
+
     }
 }

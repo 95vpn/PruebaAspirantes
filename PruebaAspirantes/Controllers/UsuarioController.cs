@@ -87,9 +87,9 @@ namespace PruebaAspirantes.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Auntenticar([FromBody] LoginDto loginDto)
+        public async Task<IActionResult> Auntenticar([FromBody] LoginDto loginDto)
         {
-            var loginTokenDto = _loginService.Auth(loginDto);
+            var loginTokenDto = await _loginService.Auth(loginDto);
 
             if (loginTokenDto == null)
                 BadRequest();
@@ -98,9 +98,9 @@ namespace PruebaAspirantes.Controllers
         }
 
         [HttpPost("logout/{userId}")]
-        public IActionResult Logout(int userId)
+        public async Task<IActionResult> Logout(int userId)
         {
-            _loginService.Logout(userId);
+            await _loginService.Logout(userId);
             return Ok(new {message = "Session cerrada correctamente"});
 
         }

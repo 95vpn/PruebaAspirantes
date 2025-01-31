@@ -4,8 +4,8 @@ namespace PruebaAspirantes.Services
 {
     public interface ILoginService
     {
-        LoginTokenDto Auth(LoginDto loginDto);
+        Task<LoginTokenDto> Auth(LoginDto loginDto);
 
-        void Logout(int userId);
+        Task Logout(int userId);
     }
 }
