@@ -69,8 +69,7 @@ namespace PruebaAspirantes.Services
                 };
             }
 
-            usuario.IntentosFallidos = 0;
-            usuario.SessionActive = "true";
+            
 
             var sessionActiva = await _loginRepository.GetUsuarioById(usuario.IdUsuario);
             if (sessionActiva != null && sessionActiva.SessionActive == "true" )
@@ -83,6 +82,8 @@ namespace PruebaAspirantes.Services
                 };
             }
 
+            usuario.IntentosFallidos = 0;
+            
             usuario.SessionActive = "true"; 
             _loginRepository.Update(usuario); 
             await _loginRepository.Save();
@@ -109,17 +110,28 @@ namespace PruebaAspirantes.Services
 
         }
 
-        public async Task Logout(int userId)
+        public async Task<string> Logout(int userId, string token)
+
         {
+            int idUserToken = IdUserFromToken(token);
+
+
+
             var session = await _loginRepository.SessionActiva(userId);
 
-            if (session != null)
+            if (session == null || session.IdUsuario != idUserToken)
             {
-                session.FechaCierre = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-                _loginRepository.Update(session);
-                await _loginRepository.Save();
-
+                return "No tienes permisos para cerrar esta session";
             }
+
+            if (session.FechaCierre != null)
+            {
+                return "La sesion ya está cerrada";
+            }
+
+            session.FechaCierre = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+            _loginRepository.Update(session);
+            await _loginRepository.Save();
 
             var usuario = await _loginRepository.GetUsuarioById(userId);
             if (usuario != null)
@@ -128,6 +140,7 @@ namespace PruebaAspirantes.Services
                 _loginRepository.Update(usuario);
                 await _usuarioRepository.Save();
             }
+            return "Session cerrada exitosamente";
             
         }
 
@@ -151,6 +164,16 @@ namespace PruebaAspirantes.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        private int IdUserFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+
+            var idUser = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            return idUser != null ? int.Parse(idUser.Value) : 0;
         }
 
     }

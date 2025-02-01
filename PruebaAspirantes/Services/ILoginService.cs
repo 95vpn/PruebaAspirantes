@@ -6,6 +6,6 @@ namespace PruebaAspirantes.Services
     {
         Task<LoginTokenDto> Auth(LoginDto loginDto);
 
-        Task Logout(int userId);
+        Task<string> Logout(int userId, string token);
     }
 }

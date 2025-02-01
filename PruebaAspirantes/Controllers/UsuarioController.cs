@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -97,10 +98,14 @@ namespace PruebaAspirantes.Controllers
             return Ok(loginTokenDto);
         }
 
+        [Authorize]
         [HttpPost("logout/{userId}")]
-        public async Task<IActionResult> Logout(int userId)
+        public async Task<IActionResult> Logout(int userId, [FromBody] LoginTokenDto loginTokenDto)
         {
-            await _loginService.Logout(userId);
+            Console.WriteLine($"Header Authorization: {Request.Headers["Authorization"]}");
+            Console.WriteLine($"Body Token: {loginTokenDto?.Token}");
+
+            await _loginService.Logout(userId, loginTokenDto.Token);
             return Ok(new {message = "Session cerrada correctamente"});
 
         }
