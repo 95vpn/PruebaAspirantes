@@ -42,13 +42,14 @@ namespace PruebaAspirantes.Services
                 {
                     
                     usuarioEmail.IntentosFallidos++;
+                    Console.WriteLine($"Intentos Fallidos: {usuarioEmail.IntentosFallidos}");
                     if (usuarioEmail.IntentosFallidos >= 3)
                     {
                         usuarioEmail.Status = "bloqueado";
-                        
+                        _loginRepository.Update(usuarioEmail);
+                        await _loginRepository.Save();
                     }
-                    _loginRepository.Update(usuarioEmail);
-                    await _loginRepository.Save();
+                    
                 }
                 
                 return new LoginTokenDto
@@ -94,6 +95,7 @@ namespace PruebaAspirantes.Services
                 FechaIngreso = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
                 FechaCierre = null,
                 IdUsuario = usuario.IdUsuario,
+                Token = GetToken(usuario)
             };
 
             await _loginRepository.Add(nuevaSession);
@@ -110,39 +112,7 @@ namespace PruebaAspirantes.Services
 
         }
 
-        public async Task<string> Logout(int userId, string token)
-
-        {
-            int idUserToken = IdUserFromToken(token);
-
-
-
-            var session = await _loginRepository.SessionActiva(userId);
-
-            if (session == null || session.IdUsuario != idUserToken)
-            {
-                return "No tienes permisos para cerrar esta session";
-            }
-
-            if (session.FechaCierre != null)
-            {
-                return "La sesion ya está cerrada";
-            }
-
-            session.FechaCierre = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-            _loginRepository.Update(session);
-            await _loginRepository.Save();
-
-            var usuario = await _loginRepository.GetUsuarioById(userId);
-            if (usuario != null)
-            {
-                usuario.SessionActive = "false";
-                _loginRepository.Update(usuario);
-                await _usuarioRepository.Save();
-            }
-            return "Session cerrada exitosamente";
-            
-        }
+        
 
         private  string GetToken(Usuario usuario)
         {
@@ -166,15 +136,7 @@ namespace PruebaAspirantes.Services
             return tokenHandler.WriteToken(token);
         }
 
-        private int IdUserFromToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtToken = tokenHandler.ReadJwtToken(token);
-
-            var idUser = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-            return idUser != null ? int.Parse(idUser.Value) : 0;
-        }
+        
 
     }
 }

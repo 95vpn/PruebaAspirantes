@@ -1,0 +1,65 @@
+﻿using Microsoft.EntityFrameworkCore;
+using PruebaAspirantes.Models;
+
+namespace PruebaAspirantes.Repository
+{
+    public class LogoutRepository : ILoginRepository
+    {
+        private StoreContext  _context;
+
+        public LogoutRepository(StoreContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Session?> SessionActiva(int id)
+        {
+            return await _context.Sessions.FirstOrDefaultAsync(s => s.IdUsuario == id && s.FechaCierre == null);
+        }
+
+        public async Task<Usuario?> GetUsuarioById(int id)
+        {
+            return await _context.Usuarios.FindAsync(id);
+        }
+
+        public void Update(Session session)
+        {
+            _context.Sessions.Attach(session);
+            _context.Sessions.Entry(session).State = EntityState.Modified;
+        }
+
+        public void Update(Usuario usuario)
+        {
+            _context.Usuarios.Attach(usuario);
+            _context.Usuarios.Entry(usuario).State = EntityState.Modified;
+        }
+
+        public async Task Save()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Add(Session session) =>
+            await _context.Sessions.AddAsync(session);
+
+        public async Task<Usuario?> GetUsuarioByEmail(string email)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
+        public async Task<Usuario?> GetUsuarioByEmailAndPassword(string email, string password)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+    }
+}

@@ -13,6 +13,8 @@ namespace PruebaAspirantes.Models
 
         public int IdUsuario { get; set; }
 
+        public string? Token {  get; set; }
+
         [ForeignKey("IdUsuario")]
         public virtual Usuario? Usuario { get; set; } 
     }

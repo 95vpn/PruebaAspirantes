@@ -28,7 +28,7 @@ namespace PruebaAspirantes.Repository
 
         public async Task<Usuario?> GetUsuarioById(int id)
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.IdUsuario == id);
+            return await _context.Usuarios.FindAsync(id);
         }
 
         public async Task<Session?> SessionActiva(int id)

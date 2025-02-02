@@ -26,6 +26,7 @@ builder.Services.AddKeyedScoped<ICommonService<RolRolOpcionDto, RolRolOpcionInse
 builder.Services.AddKeyedScoped<ICommonService<RolUsuarioDto, RolUsuarioInsertDto, RolUsuarioUpdateDto>, RolUsuarioService>("rolUsuarioService");
 builder.Services.AddKeyedScoped<ICommonService<SessionDto, SessionInsertDto, SessionUpdateDto>, SessionService>("sessionService");
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ILogoutService, LogoutService>();
 
 //repository
 builder.Services.AddScoped<IRepository<Persona>, PersonaRepository>();
@@ -38,6 +39,7 @@ builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IRepository<RolUsuario>, RolUsuarioRepository>();
 builder.Services.AddScoped<IRepository<Session>, SessionRepository>();
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
+builder.Services.AddScoped<ILoginRepository, LogoutRepository>();
 
 //entity framework
 builder.Services.AddDbContext<StoreContext>(options =>

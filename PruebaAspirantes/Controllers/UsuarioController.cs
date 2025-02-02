@@ -18,19 +18,22 @@ namespace PruebaAspirantes.Controllers
         private IValidator<UsuarioUpdateDto> _usuarioUpdateValidator;
         private ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> _usuarioService;
         private ILoginService _loginService;
+        private ILogoutService _logoutService;
         
 
         public UsuarioController(
             IValidator<UsuarioInsertDto> usuarioInsertValidator,
             IValidator<UsuarioUpdateDto> usuarioUpdateValidator,
             [FromKeyedServices("usuarioService")] ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> usuarioService,
-            ILoginService loginService)
+            ILoginService loginService,
+            ILogoutService logoutService)
         {
             
             _usuarioInsertValidator = usuarioInsertValidator;
             _usuarioUpdateValidator = usuarioUpdateValidator;
             _usuarioService = usuarioService;
             _loginService = loginService;
+            _logoutService = logoutService;
         }
 
         [HttpGet]
@@ -98,15 +101,13 @@ namespace PruebaAspirantes.Controllers
             return Ok(loginTokenDto);
         }
 
-        [Authorize]
+        
         [HttpPost("logout/{userId}")]
-        public async Task<IActionResult> Logout(int userId, [FromBody] LoginTokenDto loginTokenDto)
+        public async Task<IActionResult> Logout([FromBody] LogoutDto logoutDto)
         {
-            Console.WriteLine($"Header Authorization: {Request.Headers["Authorization"]}");
-            Console.WriteLine($"Body Token: {loginTokenDto?.Token}");
+            var logout = await _logoutService.Logout(logoutDto);
 
-            await _loginService.Logout(userId, loginTokenDto.Token);
-            return Ok(new {message = "Session cerrada correctamente"});
+            return Ok(logout);
 
         }
 

@@ -24,7 +24,7 @@ namespace PruebaAspirantes.Services
                 FechaIngreso = s.FechaIngreso,
                 FechaCierre = s.FechaCierre,
                 IdUsuario = s.IdUsuario,
-
+                Token = s.Token,
             });
 
         }
