@@ -9,13 +9,13 @@ namespace PruebaAspirantes.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-
         public int IdRol {  get; set; }
 
         public int IdUsuario { get; set; }
 
         [ForeignKey("IdRol")]
         public virtual Rol? Rol { get; set; }
+
         [ForeignKey("IdUsuario")]
         public virtual Usuario? Usuario { get; set; }
     }
