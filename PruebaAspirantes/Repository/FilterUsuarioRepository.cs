@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PruebaAspirantes.DTOs;
 using PruebaAspirantes.Models;
 
 namespace PruebaAspirantes.Repository
@@ -12,9 +13,17 @@ namespace PruebaAspirantes.Repository
             _context = context;
         }
 
-        public async Task<Session?> GetSesionesUsuario(string token)
-        {
-            return await _context.Sessions.FirstOrDefaultAsync(s => s.Token == token && s.FechaCierre == null);
-        }
+       
+
+        public async Task<IEnumerable<Session?>> GetSessions() =>
+            await _context.Sessions.ToListAsync();
+
+
+        public async Task<IEnumerable<Rol?>> GetRol() =>
+            await _context.Roles.ToListAsync();
+
+        
+        
     }
 }
+

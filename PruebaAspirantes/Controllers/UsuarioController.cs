@@ -19,6 +19,7 @@ namespace PruebaAspirantes.Controllers
         private ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> _usuarioService;
         private ILoginService _loginService;
         private ILogoutService _logoutService;
+        private IFilterUsuarioService _filterUsuarioService;
         
 
         public UsuarioController(
@@ -26,14 +27,16 @@ namespace PruebaAspirantes.Controllers
             IValidator<UsuarioUpdateDto> usuarioUpdateValidator,
             [FromKeyedServices("usuarioService")] ICommonService<UsuarioDto, UsuarioInsertDto, UsuarioUpdateDto> usuarioService,
             ILoginService loginService,
-            ILogoutService logoutService)
+            ILogoutService logoutService,
+            IFilterUsuarioService filterUsuarioService)
         {
             
             _usuarioInsertValidator = usuarioInsertValidator;
             _usuarioUpdateValidator = usuarioUpdateValidator;
             _usuarioService = usuarioService;
             _loginService = loginService;
-            _logoutService = logoutService;
+            _logoutService = logoutService; ;
+            _filterUsuarioService = filterUsuarioService;
         }
 
         [HttpGet]
@@ -102,13 +105,25 @@ namespace PruebaAspirantes.Controllers
         }
 
         
-        [HttpPost("logout/{userId}")]
+        [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutDto logoutDto)
         {
             var logout = await _logoutService.Logout(logoutDto);
 
             return Ok(logout);
 
+        }
+
+        
+        [HttpGet("usuario/{idUsuario}")]
+        [Authorize(Roles = "Administrador")]
+        public async Task<ActionResult<IEnumerable<SessionDto>>> GetSesionesUsuario(int idUsuario)
+        {
+            var token  = Request.Headers["Authorization"].ToString().Replace("Bearer", "");
+
+            var sesiones = await _filterUsuarioService.GetSesionesUsuario(idUsuario, token);
+
+            return Ok(sesiones);
         }
 
     }

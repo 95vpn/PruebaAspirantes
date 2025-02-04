@@ -1,9 +1,12 @@
-﻿using PruebaAspirantes.Models;
+﻿using PruebaAspirantes.DTOs;
+using PruebaAspirantes.Models;
 
 namespace PruebaAspirantes.Repository
 {
     public interface IFilterUsuarioRepository
     {
-        Task<Session?> GetSesionesUsuario(string token);
+        Task<IEnumerable<Session?>> GetSessions();
+
+        Task<IEnumerable<Rol?>> GetRol();
     }
 }
