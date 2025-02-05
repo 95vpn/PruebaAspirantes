@@ -23,8 +23,9 @@ namespace PruebaAspirantes.Repository
 
         public async Task<Usuario?> GetUsuarioByEmail(string email)
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
-        }
+            return await _context.Usuarios.Include(u => u.RolUsuarios).ThenInclude(ru => ru.Rol).FirstOrDefaultAsync(u => u.Email == email);
+        } 
+        
 
         public async Task<Usuario?> GetUsuarioById(int id)
         {

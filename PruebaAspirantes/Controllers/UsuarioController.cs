@@ -114,12 +114,12 @@ namespace PruebaAspirantes.Controllers
 
         }
 
-        
+        [Authorize(Policy = "AdminSessiones")]
         [HttpGet("usuario/{idUsuario}")]
-        [Authorize(Roles = "Administrador")]
+        
         public async Task<ActionResult<IEnumerable<SessionDto>>> GetSesionesUsuario(int idUsuario)
         {
-            var token  = Request.Headers["Authorization"].ToString().Replace("Bearer", "");
+            var token  = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
             var sesiones = await _filterUsuarioService.GetSesionesUsuario(idUsuario, token);
 

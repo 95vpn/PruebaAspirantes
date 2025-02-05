@@ -1,4 +1,7 @@
-﻿using PruebaAspirantes.DTOs;
+﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using PruebaAspirantes.DTOs;
 using PruebaAspirantes.Models;
 using PruebaAspirantes.Repository;
 
@@ -21,35 +24,39 @@ namespace PruebaAspirantes.Services
 
         public async Task<IEnumerable<SessionDto>> GetSesionesUsuario(int idUsuario, string token)
         {
-            var sesion = await _filterUsuarioRepository.GetSesionesToken(token);
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
 
-            if (sesion == null || sesion.FechaCierre != null)
+            var idUsuarioSolicitante = int.Parse(jwtToken.Claims.First(claim => claim.Type == ClaimTypes.NameIdentifier).Value);
+            var roles = jwtToken.Claims.Where(claim => claim.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+            // Verificar permisos: Admin o el mismo usuario
+            bool esAdmin = roles.Contains("Administrador");
+            bool esMismoUsuario = idUsuarioSolicitante == idUsuario;
+
+            if (!esAdmin && !esMismoUsuario)
             {
-                throw new UnauthorizedAccessException("Session invalido o expirado");
+                throw new UnauthorizedAccessException("No tienes permisos para ver estas sesiones.");
             }
-            var rol = await _filterUsuarioRepository.GetRol("Administrador");
 
-            if (rol == null)
+            var sesiones = await _filterUsuarioRepository.GetSesionesIdUsuario(idUsuario);
+
+            if (sesiones == null || !sesiones.Any())
             {
-                throw new Exception("Rol no encontrado");
+                throw new Exception("No se encontraron sesiones para este usuario.");
             }
 
-            var rolUsuario = await _rolUsuarioRepository.Get();
-            var rolAsignado = rolUsuario.FirstOrDefault(ru => ru.IdUsuario == sesion.IdUsuario);
-
-            if (rolAsignado != null && rolAsignado.IdRol == rol.IdRol )
+            // Obtener las sesiones del usuario solicitado
+            var sesionesDto = sesiones.Select(s => new SessionDto
             {
-                var sesiones = await _filterUsuarioRepository.GetSesionesUsuario(idUsuario);
-                return sesiones.Select(s => new SessionDto
-                {
-                    IdSession = s.IdSession,
-                    FechaIngreso = s.FechaIngreso,
-                    FechaCierre = s.FechaCierre,
-                    IdUsuario = s.IdUsuario,
-                    Token = s.Token
-                });
-            }
-            throw new UnauthorizedAccessException("No tienes permisos para ver esta información.");
+                IdSession = s.IdSession,
+                FechaIngreso = s.FechaIngreso,
+                FechaCierre = s.FechaCierre,
+                IdUsuario = s.IdUsuario,
+                Token = s.Token
+            }).ToList();  // Convertir a lista si se requiere
+
+            return sesionesDto;
         }
     }
     

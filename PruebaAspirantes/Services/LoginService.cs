@@ -119,15 +119,21 @@ namespace PruebaAspirantes.Services
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var llave = Encoding.ASCII.GetBytes(_appSetting.Secreto);
+
+            var roles = usuario.RolUsuarios?.Select(ru => ru.Rol?.RolName).Where(nombre => !string.IsNullOrEmpty(nombre)).ToList();
+
+            var rolesConcatenados = roles != null ? string.Join(",", roles) : string.Empty;
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
+                new Claim(ClaimTypes.Email, usuario.Email),
+                new Claim("RolName", rolesConcatenados)
+            };
+                    
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(
-                    new Claim[]
-                    {
-                        new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
-                        new Claim(ClaimTypes.Email, usuario.Email)
-                    }
-                    ),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(60),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(llave), SecurityAlgorithms.HmacSha256Signature)
             };

@@ -82,6 +82,11 @@ builder.Services.AddAuthentication(d =>
         };
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminSessiones", policy => policy.RequireClaim("RolName", "Administrador"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
