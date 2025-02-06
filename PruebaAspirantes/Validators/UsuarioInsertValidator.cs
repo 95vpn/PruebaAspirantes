@@ -17,7 +17,7 @@ namespace PruebaAspirantes.Validators
                 .Matches("^[a-zA-Z0-9]+").WithMessage("El nombre de usuarios no debe contener signos")
                 .Matches("[A-Z]").WithMessage("El nombre de usuario debe contener al menos una letra mayuscula")
                 .Matches("[0-9]").WithMessage("El nombre de usuario debe contener al menos un número")
-                .Length(8, 20).WithMessage("El nombre de usuario debe contener de 2 a 20 caracteres")
+                .Length(8, 20).WithMessage("El nombre de usuario debe contener de 8 a 20 caracteres")
                 .MustAsync(async (userName, cancellation) =>
                 {
                     var exiteUserName = await _context.Usuarios.AnyAsync(u => u.UserName == userName);
@@ -25,7 +25,7 @@ namespace PruebaAspirantes.Validators
                 }).WithMessage("El nombre de usuario ya existe");
 
             RuleFor(x => x.Password)
-                .MaximumLength(8).WithMessage("Contrseña debe contener al menos 8 dígitos")
+                .MinimumLength(8).WithMessage("Contrseña debe contener al menos 8 dígitos")
                 .Matches("[A-Z]").WithMessage("Constraseña debe tener al menos una letra mayuscula")
                 .Matches("^[^\\s]+$").WithMessage("La contraseña no debe contener espacios.")
                 .Matches("[!@#$%^&*(),.?\":{}|<>]").WithMessage("La contraseña debe contener al menos un signo (por ejemplo, !, @, #, $)."); ;

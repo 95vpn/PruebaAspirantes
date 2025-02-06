@@ -7,7 +7,8 @@ namespace PruebaAspirantes.DTOs
         public int IdUsuario { get; set; }
         public string? Email { get; set; }
 
-        
         public string? Token { get; set; }
+
+        public string? RolName { get; set; }
     }
 }

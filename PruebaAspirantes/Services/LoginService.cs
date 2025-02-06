@@ -101,12 +101,17 @@ namespace PruebaAspirantes.Services
             await _loginRepository.Add(nuevaSession);
             await _loginRepository.Save();
 
+            var roles = usuario.RolUsuarios?.Select(ru => ru.Rol?.RolName).Where(nombre => !string.IsNullOrEmpty(nombre)).ToList();
+
+            var rolesConcatenados = roles != null ? string.Join(",", roles) : string.Empty;
+
 
             var loginToken = new LoginTokenDto
             {
                 IdUsuario = usuario.IdUsuario,
                 Email = usuario.Email,
-                Token = GetToken(usuario) 
+                Token = GetToken(usuario),
+                RolName = rolesConcatenados
             };
             return loginToken;
 

@@ -18,7 +18,7 @@ namespace PruebaAspirantes.Repository
 
         public async Task<Usuario?> GetUsuarioByEmailAndPassword(string email, string password)
         {
-            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
+            return await _context.Usuarios.Include(u => u.RolUsuarios).ThenInclude(ru => ru.Rol).FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
         }
 
         public async Task<Usuario?> GetUsuarioByEmail(string email)
